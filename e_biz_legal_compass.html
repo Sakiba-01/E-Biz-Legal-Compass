@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Biz Legal Compass - เข็มทิศกฎหมายธุรกิจออนไลน์</title>
+  <!-- โหลด Tailwind CSS สำหรับตกแต่ง UI ที่สวยงามและรองรับทุกขนาดหน้าจอ -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- โหลดฟอนต์ภาษาไทย Sarabun และ Prompt เพื่อความทันสมัยและอ่านง่าย -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- โหลด Font Awesome สำหรับไอคอน -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Sarabun', 'sans-serif'],
+            display: ['Prompt', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              50: '#f0f4f8',
+              100: '#d9e2ec',
+              200: '#bcccdc',
+              600: '#243b53',
+              700: '#102a43',
+              800: '#0a192f',
+              900: '#06101e',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* ตั้งค่าการพิมพ์รายงาน (Print Mode) ให้ดูเป็นระเบียบเหมือนเอกสารทางการ */
+    @media print {
+      .no-print { display: none !important; }
+      body { background-color: #ffffff !important; color: #000000 !important; }
+      .print-only-header { display: block !important; }
+      .shadow-sm, .shadow-md, .shadow-lg { box-shadow: none !important; }
+      .border { border-color: #cbd5e1 !important; }
+    }
+    .print-only-header { display: none; }
+    /* แอนิเมชันเปลี่ยนหน้าแท็บแบบนุ่มนวล */
+    .tab-pane { animation: fadeIn 0.25s ease-in-out; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- ส่วนหัวสำหรับโหมดพิมพ์รายงานเท่านั้น -->
+  <div class="print-only-header p-6 border-b-2 border-navy-800 mb-4">
+    <h1 class="text-2xl font-display font-bold text-navy-800">รายงานบันทึกผลการสืบค้นและวิเคราะห์กฎหมายธุรกิจออนไลน์</h1>
+    <p class="text-sm text-slate-600">สร้างจากระบบ E-Biz Legal Compass (เข็มทิศกฎหมายธุรกิจออนไลน์) | วันที่พิมพ์: <span id="print-date"></span></p>
+  </div>
+
+  <!-- แถบนำทางหลัก (Navigation Bar) -->
+  <header class="bg-navy-800 text-white shadow-md sticky top-0 z-40 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between py-3 md:h-16 gap-3">
+        <!-- โลโก้และชื่อแอป -->
+        <div class="flex items-center justify-between">
+          <button onclick="switchTab('home')" class="flex items-center gap-3 text-left focus:outline-none group">
+            <div class="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center text-white shadow-inner group-hover:bg-sky-400 transition">
+              <i class="fa-solid fa-compass text-xl"></i>
+            </div>
+            <div>
+              <span class="font-display font-bold text-lg tracking-wide block leading-tight text-white">E-Biz Legal Compass</span>
+              <span class="text-xs text-sky-200 block">เข็มทิศกฎหมายธุรกิจออนไลน์</span>
+            </div>
+          </button>
+        </div>
+
+        <!-- เมนูนำทาง 4 ส่วนหลัก (รองรับการเลื่อนแนวนอนบนมือถือ) -->
+        <nav class="flex overflow-x-auto pb-1 md:pb-0 gap-1 sm:gap-2 no-scrollbar" aria-label="เมนูหลัก">
+          <button onclick="switchTab('home')" id="nav-home" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition flex items-center gap-2 bg-sky-600 text-white">
+            <i class="fa-solid fa-house"></i> หน้าแรก
+          </button>
+          <button onclick="switchTab('scenarios')" id="nav-scenarios" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition flex items-center gap-2 text-slate-200 hover:bg-navy-700">
+            <i class="fa-solid fa-briefcase"></i> เลือกสถานการณ์ธุรกิจ
+          </button>
+          <button onclick="switchTab('search')" id="nav-search" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition flex items-center gap-2 text-slate-200 hover:bg-navy-700">
+            <i class="fa-solid fa-magnifying-glass"></i> สืบค้นและแหล่งอ้างอิง
+          </button>
+          <button onclick="switchTab('notes')" id="nav-notes" class="nav-btn px-3 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition flex items-center gap-2 text-slate-200 hover:bg-navy-700">
+            <i class="fa-solid fa-book-bookmark"></i> สมุดบันทึกผล
+            <span id="note-badge" class="bg-sky-500 text-white text-xs px-1.5 py-0.5 rounded-full font-bold">0</span>
+          </button>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- พื้นที่เนื้อหาหลัก -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+
+    <!-- ========================================== -->
+    <!-- ส่วนที่ 1: หน้าแรก (Home) -->
+    <!-- ========================================== -->
+    <section id="tab-home" class="tab-pane space-y-8">
+      <!-- Hero Banner -->
+      <div class="bg-gradient-to-br from-navy-800 via-navy-700 to-sky-900 rounded-2xl p-6 sm:p-10 text-white shadow-lg relative overflow-hidden">
+        <div class="relative z-10 max-w-3xl space-y-4">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/30 text-sky-200 text-xs sm:text-sm font-medium">
+            <i class="fa-solid fa-scale-balanced"></i> เครื่องมือช่วยตัดสินใจทางกฎหมายสำหรับผู้ประกอบการดิจิทัล
+          </div>
+          <h1 class="font-display text-2xl sm:text-4xl font-bold leading-snug">
+            E-Biz Legal Compass<br>
+            <span class="text-sky-300 text-xl sm:text-3xl">เข็มทิศกฎหมายธุรกิจออนไลน์</span>
+          </h1>
+          <p class="text-slate-200 text-base sm:text-lg leading-relaxed">
+            ระบบช่วยผู้ประกอบการร้านค้าออนไลน์ตรวจสอบว่ากิจกรรมทางธุรกิจของตนเกี่ยวข้องกับกฎหมายใดบ้าง พร้อมแนะนำคำค้น แหล่งอ้างอิงทางการที่ตรวจสอบย้อนกลับได้ และสมุดบันทึกผลการวิเคราะห์เพื่อใช้ประกอบการตัดสินใจอย่างมั่นใจ
+          </p>
+          <div class="pt-2 flex flex-wrap gap-3">
+            <button onclick="switchTab('scenarios')" class="px-6 py-3 bg-sky-500 hover:bg-sky-400 text-white font-display font-semibold rounded-xl shadow-md transition flex items-center gap-2">
+              <i class="fa-solid fa-rocket"></i> เริ่มต้นใช้งานด่วน (Start Checking)
+            </button>
+            <button onclick="switchTab('search')" class="px-5 py-3 bg-white/10 hover:bg-white/20 text-white font-medium rounded-xl border border-white/20 transition flex items-center gap-2">
+              <i class="fa-solid fa-landmark"></i> ดูแหล่งอ้างอิงทางการ
+            </button>
+          </div>
+        </div>
+        <!-- ไอคอนตกแต่งพื้นหลัง -->
+        <i class="fa-solid fa-compass absolute -right-8 -bottom-8 text-[12rem] text-white/5 pointer-events-none"></i>
+      </div>
+
+      <!-- 4 ขั้นตอนการทำงานของระบบ -->
+      <div>
+        <h2 class="font-display text-xl font-bold text-navy-800 mb-4 flex items-center gap-2">
+          <i class="fa-solid fa-route text-sky-600"></i> ขั้นตอนการใช้งานระบบ
+        </h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div onclick="switchTab('scenarios')" class="cursor-pointer bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-sky-400 hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold mb-3">1</div>
+            <h3 class="font-display font-bold text-navy-800 mb-1">เลือกสถานการณ์ธุรกิจ</h3>
+            <p class="text-sm text-slate-600">เลือกกิจกรรมที่ร้านค้าดำเนินการ เช่น เก็บข้อมูลจัดส่ง ใช้ภาพสินค้า หรือรับชำระเงิน</p>
+          </div>
+          <div onclick="switchTab('scenarios')" class="cursor-pointer bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-sky-400 hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold mb-3">2</div>
+            <h3 class="font-display font-bold text-navy-800 mb-1">ตรวจประเด็นกฎหมาย</h3>
+            <p class="text-sm text-slate-600">ดูรายชื่อกฎหมายที่เกี่ยวข้อง คำค้นแนะนำ และข้อควรระวังก่อนตัดสินใจ</p>
+          </div>
+          <div onclick="switchTab('search')" class="cursor-pointer bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-sky-400 hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold mb-3">3</div>
+            <h3 class="font-display font-bold text-navy-800 mb-1">สืบค้นแหล่งอ้างอิง</h3>
+            <p class="text-sm text-slate-600">ตรวจสอบความถูกต้องจากเว็บไซต์หน่วยงานรัฐและฐานข้อมูลกฎหมายทางการ</p>
+          </div>
+          <div onclick="switchTab('notes')" class="cursor-pointer bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:border-sky-400 hover:shadow-md transition">
+            <div class="w-10 h-10 rounded-lg bg-sky-100 text-sky-700 flex items-center justify-center font-bold mb-3">4</div>
+            <h3 class="font-display font-bold text-navy-800 mb-1">บันทึกและสรุปผล</h3>
+            <p class="text-sm text-slate-600">จดบันทึกข้อค้นพบ หลักฐานอ้างอิง และพิมพ์รายงานสรุปเก็บไว้ใช้งาน</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- กล่องข้อควรระวังทางวิชาการ -->
+      <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 sm:p-5 flex items-start gap-3">
+        <i class="fa-solid fa-triangle-exclamation text-amber-600 text-xl mt-0.5"></i>
+        <div class="text-sm text-amber-900">
+          <strong class="font-display block text-base mb-1">ข้อแนะนำในการใช้งาน: แยกข้อเท็จจริงออกจากข้อสันนิษฐาน</strong>
+          ข้อมูลกฎหมายในระบบนี้ผ่านการตรวจสอบเบื้องต้นจากหน่วยงานทางการแล้ว อย่างไรก็ตาม ผู้ประกอบการควรตรวจสอบข้อเท็จจริงเฉพาะของร้านค้าตนเองเพิ่มเติม (เช่น ที่มาของภาพสินค้า รูปแบบการจดทะเบียน และช่องทางรับชำระเงิน) ก่อนสรุปผลทางกฎหมาย
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- ส่วนที่ 2: เลือกสถานการณ์ธุรกิจ (Business Scenarios) -->
+    <!-- ========================================== -->
+    <section id="tab-scenarios" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-slate-200 pb-4">
+        <div>
+          <h2 class="font-display text-2xl font-bold text-navy-800">เลือกสถานการณ์ธุรกิจดิจิทัล</h2>
+          <p class="text-sm text-slate-600">เลือกกรณีศึกษาที่ตรงกับกิจกรรมของร้านค้า (ข้อมูลตรวจสอบแล้ว 3 กรณีหลัก)</p>
+        </div>
+      </div>
+
+      <!-- การ์ดเลือกสถานการณ์ 3 กรณี -->
+      <div id="scenario-cards-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- Render ผ่าน JS -->
+      </div>
+
+      <!-- พื้นที่แสดงรายละเอียดเชิงลึกของสถานการณ์ที่เลือก -->
+      <div id="scenario-detail-panel" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
+        <!-- Render ผ่าน JS -->
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- ส่วนที่ 3: สืบค้นและแหล่งอ้างอิงทางการ (Search & References) -->
+    <!-- ========================================== -->
+    <section id="tab-search" class="tab-pane hidden space-y-6">
+      <div class="border-b border-slate-200 pb-4">
+        <h2 class="font-display text-2xl font-bold text-navy-800">ระบบสืบค้นประเด็นกฎหมายและแหล่งอ้างอิงทางการ</h2>
+        <p class="text-sm text-slate-600">พิมพ์คำค้นเพื่อกรองดูประเด็นกฎหมาย คำค้นแนะนำ และคลิกตรวจสอบข้อมูลจากแหล่งอ้างอิงของหน่วยงานรัฐ</p>
+      </div>
+
+      <!-- แถบค้นหาและตัวกรองหมวดหมู่ -->
+      <div class="bg-white p-4 sm:p-5 rounded-xl border border-slate-200 shadow-sm space-y-4">
+        <div class="flex flex-col md:flex-row gap-3">
+          <div class="relative flex-1">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400"></i>
+            <input type="text" id="search-input" oninput="filterKnowledgeBase()" placeholder="พิมพ์คำค้น เช่น PDPA, ลิขสิทธิ์ภาพ, DBD, Payment Gateway, Privacy Notice..." class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none text-sm">
+          </div>
+          <select id="category-filter" onchange="filterKnowledgeBase()" class="px-4 py-2.5 rounded-lg border border-slate-300 bg-white text-sm focus:ring-2 focus:ring-sky-500 outline-none">
+            <option value="all">ทุกหมวดหมู่กฎหมาย</option>
+            <option value="pdpa">ข้อมูลส่วนบุคคล (PDPA)</option>
+            <option value="ip_consumer">ลิขสิทธิ์และคุ้มครองผู้บริโภค</option>
+            <option value="ecommerce_pay">ธุรกรรมอิเล็กทรอนิกส์และการชำระเงิน</option>
+          </select>
+          <button onclick="resetSearch()" class="px-4 py-2.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-100 text-sm font-medium transition">
+            ล้างค่า
+          </button>
+        </div>
+      </div>
+
+      <!-- ผลการสืบค้นประเด็นกฎหมาย -->
+      <div>
+        <h3 class="font-display text-lg font-bold text-navy-800 mb-3 flex items-center justify-between">
+          <span><i class="fa-solid fa-list-check text-sky-600 mr-2"></i>รายการประเด็นกฎหมายและคำค้นที่เกี่ยวข้อง</span>
+          <span id="search-count" class="text-xs font-normal bg-slate-200 text-slate-700 px-2.5 py-1 rounded-full"></span>
+        </h3>
+        <div id="search-results-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Render ผ่าน JS -->
+        </div>
+      </div>
+
+      <!-- รายการแหล่งอ้างอิงทางการที่ตรวจสอบย้อนกลับได้ -->
+      <div class="pt-4">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-3 gap-1">
+          <h3 class="font-display text-lg font-bold text-navy-800">
+            <i class="fa-solid fa-landmark text-sky-600 mr-2"></i>แหล่งอ้างอิงทางการที่ตรวจสอบย้อนกลับได้
+          </h3>
+          <span class="text-xs text-slate-500 bg-sky-50 border border-sky-200 text-sky-800 px-3 py-1 rounded-full">
+            <i class="fa-regular fa-calendar-check mr-1"></i> วันที่ตรวจสอบความถูกต้อง: 20 พฤศจิกายน 2569
+          </span>
+        </div>
+        <div id="official-sources-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Render ผ่าน JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- ส่วนที่ 4: สรุปผลและสมุดบันทึกการสืบค้น (Summary & Research Log) -->
+    <!-- ========================================== -->
+    <section id="tab-notes" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-slate-200 pb-4 no-print">
+        <div>
+          <h2 class="font-display text-2xl font-bold text-navy-800">สมุดบันทึกผลการสืบค้นและสรุปการวิเคราะห์</h2>
+          <p class="text-sm text-slate-600">บันทึกข้อค้นพบ หลักฐานอ้างอิง และข้อควรระวัง (จัดเก็บในเบราว์เซอร์อัตโนมัติ)</p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <button onclick="copyAllNotes()" class="px-4 py-2 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg text-sm font-medium transition flex items-center gap-2">
+            <i class="fa-regular fa-copy"></i> คัดลอกสรุปทั้งหมด
+          </button>
+          <button onclick="printReport()" class="px-4 py-2 bg-navy-800 hover:bg-navy-700 text-white rounded-lg text-sm font-medium transition flex items-center gap-2 shadow-sm">
+            <i class="fa-solid fa-print"></i> พิมพ์รายงาน / บันทึก PDF
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- คอลัมน์ซ้าย: ฟอร์มบันทึกข้อมูล -->
+        <div class="lg:col-span-5 no-print">
+          <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-4 sticky top-20">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h3 id="form-title" class="font-display font-bold text-lg text-navy-800">
+                <i class="fa-solid fa-pen-to-square text-sky-600 mr-1.5"></i> บันทึกผลการวิเคราะห์ใหม่
+              </h3>
+              <button type="button" onclick="autoFillFromCurrentScenario()" class="text-xs bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 px-2.5 py-1.5 rounded-lg font-medium transition flex items-center gap-1" title="ดึงข้อมูลจากสถานการณ์ที่เลือกอยู่มาใส่ฟอร์ม">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> ดึงข้อมูลอัตโนมัติ
+              </button>
+            </div>
+
+            <form id="note-form" onsubmit="saveNote(event)" class="space-y-3.5">
+              <input type="hidden" id="edit-note-id" value="">
+              
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">1. สถานการณ์ธุรกิจ / หัวข้อที่วิเคราะห์ <span class="text-red-500">*</span></label>
+                <input type="text" id="note-scenario" required placeholder="เช่น การเก็บข้อมูลลูกค้าเพื่อจัดส่งสินค้า" class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 outline-none text-sm">
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">2. ข้อค้นพบทางกฎหมายที่เกี่ยวข้อง <span class="text-red-500">*</span></label>
+                <textarea id="note-findings" rows="3" required placeholder="ระบุชื่อกฎหมาย มาตรา หรือหลักเกณฑ์ที่ค้นพบ..." class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 outline-none text-sm"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">3. หลักฐาน / แหล่งอ้างอิงที่ใช้ตรวจสอบ <span class="text-red-500">*</span></label>
+                <textarea id="note-evidence" rows="2" required placeholder="ระบุชื่อหน่วยงาน ชื่อเอกสาร หรือ URL ที่ตรวจสอบ..." class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 outline-none text-sm"></textarea>
+              </div>
+
+              <div>
+                <label class="block text-sm font-semibold text-slate-700 mb-1">4. ข้อควรระวัง / แนวทางปฏิบัติสำหรับร้านค้า <span class="text-red-500">*</span></label>
+                <textarea id="note-precautions" rows="3" required placeholder="ระบุสิ่งที่ร้านค้าต้องดำเนินการหรือระมัดระวัง..." class="w-full px-3.5 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-sky-500 outline-none text-sm"></textarea>
+              </div>
+
+              <div class="pt-2 flex gap-2">
+                <button type="submit" id="submit-note-btn" class="flex-1 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-display font-semibold rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                  <i class="fa-solid fa-floppy-disk"></i> บันทึกผลการสืบค้น
+                </button>
+                <button type="button" id="cancel-edit-btn" onclick="resetNoteForm()" class="hidden px-4 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded-xl transition">
+                  ยกเลิก
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- คอลัมน์ขวา: รายการบันทึกทั้งหมด -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="flex items-center justify-between no-print">
+            <h3 class="font-display font-bold text-lg text-navy-800">รายการบันทึกผลการวิเคราะห์ทั้งหมด</h3>
+            <span class="text-xs text-slate-500">ข้อมูลถูกบันทึกไว้ใน LocalStorage ของเครื่องนี้</span>
+          </div>
+          <div id="saved-notes-list" class="space-y-4">
+            <!-- Render ผ่าน JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- กล่องแจ้งเตือนแบบ Toast (แทนการใช้ alert() ตามมาตรฐานความปลอดภัย) -->
+  <div id="toast-box" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none no-print">
+    <div class="bg-navy-800 text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-3 border border-slate-700">
+      <i id="toast-icon" class="fa-solid fa-circle-check text-sky-400"></i>
+      <span id="toast-message" class="text-sm font-medium">บันทึกข้อมูลสำเร็จ</span>
+    </div>
+  </div>
+
+  <!-- Modal ยืนยันการลบ (แทนการใช้ confirm()) -->
+  <div id="delete-modal" class="fixed inset-0 bg-slate-900/50 z-50 hidden items-center justify-center p-4 no-print">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl space-y-4">
+      <div class="flex items-center gap-3 text-red-600">
+        <div class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
+        <h3 class="font-display font-bold text-lg text-slate-900">ยืนยันการลบบันทึก</h3>
+      </div>
+      <p class="text-sm text-slate-600">คุณต้องการลบบันทึกผลการวิเคราะห์รายการนี้ใช่หรือไม่? การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeDeleteModal()" class="px-4 py-2 rounded-lg border border-slate-300 text-slate-700 hover:bg-slate-50 text-sm font-medium">ยกเลิก</button>
+        <button onclick="confirmDeleteNote()" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white text-sm font-medium">ลบบันทึก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ส่วนท้าย (Footer) -->
+  <footer class="bg-white border-t border-slate-200 py-5 mt-12 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+      <div>
+        <strong class="text-navy-800">E-Biz Legal Compass</strong> — เข็มทิศกฎหมายธุรกิจออนไลน์สำหรับผู้ประกอบการดิจิทัล
+      </div>
+      <div>
+        อัปเดตฐานข้อมูลกฎหมายล่าสุด: 20 พฤศจิกายน 2569 | ใช้เพื่อประกอบการศึกษาและตัดสินใจเบื้องต้น
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================== -->
+  <!-- ส่วนควบคุมการทำงานด้วย JavaScript -->
+  <!-- ========================================== -->
+  <script>
+    // 1. ฐานข้อมูลสถานการณ์ธุรกิจดิจิทัลที่ตรวจสอบแล้ว 3 กรณี
+    const SCENARIOS_DATA = [
+      {
+        id: 'sc1',
+        category: 'pdpa',
+        icon: 'fa-truck-fast',
+        badge: 'กรณีที่ 1 : ข้อมูลส่วนบุคคล & การจัดส่ง',
+        title: 'การเก็บข้อมูลลูกค้าและการจัดส่งสินค้า',
+        shortDesc: 'เก็บชื่อ ที่อยู่ เบอร์โทรลูกค้า และส่งต่อให้บริษัทขนส่งเพื่อนำส่งพัสดุ',
+        laws: [
+          'พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) มาตรา 22, 23, 24(3) และมาตรา 40'
+        ],
+        keywords: [
+          'ฐานสัญญา PDPA จัดส่งสินค้า',
+          'Privacy Notice ร้านค้าออนไลน์',
+          'ข้อตกลง DPA บริษัทขนส่ง',
+          'Data Masking ใบปะหน้าพัสดุ'
+        ],
+        issues: [
+          {
+            topic: 'ฐานการประมวลผลที่เหมาะสม (Lawful Basis)',
+            detail: 'การจัดส่งสินค้าเป็นภาระผูกพันตามสัญญาซื้อขาย สามารถใช้ "ฐานสัญญา (Contract - ม.24(3))" ได้โดยไม่ต้องขอความยินยอม (Consent) แต่หากจะนำเบอร์โทรไปส่ง SMS โฆษณา ต้องขอความยินยอมแยกต่างหาก'
+          },
+          {
+            topic: 'หน้าที่แจ้งรายละเอียด (Privacy Notice - ม.23)',
+            detail: 'ร้านค้า (Data Controller) ต้องแจ้งวัตถุประสงค์การเก็บข้อมูล ประเภทผู้รับข้อมูล (บริษัทขนส่ง) ระยะเวลาจัดเก็บ และสิทธิของลูกค้าให้ทราบก่อนหรือขณะเก็บข้อมูล'
+          },
+          {
+            topic: 'ความรับผิดชอบเมื่อส่งข้อมูลให้บริษัทขนส่ง',
+            detail: 'ต้องตรวจสอบว่าบริษัทขนส่งมีสถานะเป็นผู้ประมวลผลข้อมูลฯ (Data Processor) หรือผู้ควบคุมข้อมูลฯ อิสระ และควรมีข้อตกลง DPA เพื่อห้ามขนส่งนำข้อมูลลูกค้าไปใช้ทำการตลาดต่อ'
+          }
+        ],
+        factCheck: 'ตรวจสอบว่าบริษัทขนส่งที่ใช้บริการมีนโยบายคุ้มครองข้อมูลส่วนบุคคลหรือไม่ และร้านค้าได้แยกฐานข้อมูลลูกค้าสำหรับการจัดส่งออกจากฐานข้อมูลการตลาดแล้วหรือยัง',
+        precautions: 'ห้ามใช้ "ปุ่มขอความยินยอม" สำหรับการส่งของ เพราะหากลูกค้าถอนความยินยอมร้านจะส่งของไม่ได้ ควรเปลี่ยนเป็นข้อความ "แจ้งเพื่อทราบ" และปิดบังเบอร์โทรบางหลักบนใบปะหน้าพัสดุ',
+        references: 'สำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (สคส.) / พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (https://www.pdpc.or.th)'
+      },
+      {
+        id: 'sc2',
+        category: 'ip_consumer',
+        icon: 'fa-images',
+        badge: 'กรณีที่ 2 : ภาพสินค้า & การโฆษณา',
+        title: 'การใช้ภาพสินค้าและสื่อโฆษณาบนเว็บไซต์/โซเชียล',
+        shortDesc: 'นำภาพถ่ายสินค้า วิดีโอรีวิว และข้อความโปรโมชันมาโพสต์ขายบนหน้าเว็บและเพจ',
+        laws: [
+          'พ.ร.บ. ลิขสิทธิ์ พ.ศ. 2537 และที่แก้ไขเพิ่มเติม (มาตรา 6, 27, 31)',
+          'พ.ร.บ. คุ้มครองผู้บริโภค พ.ศ. 2522 (มาตรา 22 ด้านการโฆษณา)',
+          'พ.ร.บ. ว่าด้วยราคาสินค้าและบริการ พ.ศ. 2542'
+        ],
+        keywords: [
+          'ละเมิดลิขสิทธิ์ภาพถ่ายเพื่อการค้า',
+          'ขออนุญาตใช้ภาพสินค้า ซัพพลายเออร์',
+          'โฆษณาเกินจริง สคบ.',
+          'กฎหมายแสดงราคาสินค้าออนไลน์'
+        ],
+        issues: [
+          {
+            topic: 'ความเป็นเจ้าของลิขสิทธิ์และสิทธิในการใช้ภาพ',
+            detail: 'ภาพถ่ายและงานกราฟิกได้รับความคุ้มครองลิขสิทธิ์ทันทีที่สร้างสรรค์ การนำภาพจากอินเทอร์เน็ตหรือร้านอื่นมาใช้โดยไม่ได้รับอนุญาต ถือเป็นการละเมิดลิขสิทธิ์เพื่อการค้า (มีโทษทั้งจำคุกและปรับ)'
+          },
+          {
+            topic: 'ความถูกต้องของข้อความโฆษณาและสรรพคุณสินค้า',
+            detail: 'ข้อความโฆษณาต้องไม่เป็นเท็จหรือเกินความจริง ไม่ก่อให้เกิดความเข้าใจผิดในสาระสำคัญของสินค้า และหากเป็นสินค้าควบคุม (เช่น อาหารเสริม เครื่องสำอาง) ต้องแสดงเลข อย. ให้ถูกต้อง'
+          },
+          {
+            topic: 'การแสดงราคาและค่าใช้จ่ายเพิ่มเติม',
+            detail: 'ต้องแสดงราคาขายปลีก ค่าจัดส่ง และเงื่อนไขการรับประกัน/คืนสินค้าให้ชัดเจนและเปิดเผยก่อนผู้บริโภคตัดสินใจสั่งซื้อ'
+          }
+        ],
+        factCheck: 'ตรวจสอบที่มาของภาพสินค้าทุกรูปว่า "ถ่ายเอง จ้างทำ ซื้อลิขสิทธิ์ (Stock Photo) หรือได้รับหนังสืออนุญาตเป็นลายลักษณ์อักษรจากเจ้าของแบรนด์/ซัพพลายเออร์" หรือไม่',
+        precautions: 'หลีกเลี่ยงการเซฟภาพจาก Google หรือคัดลอกภาพรีวิวของลูกค้าคนอื่นมาใช้โฆษณาโดยไม่ขออนุญาต และห้ามใช้ข้อความอวดอ้างสรรพคุณเกินจริงเด็ดขาด',
+        references: 'สำนักงานคณะกรรมการกฤษฎีกา / พ.ร.บ. ลิขสิทธิ์ พ.ศ. 2537 (https://www.krisdika.go.th) และ สคบ. (https://www.ocpb.go.th)'
+      },
+      {
+        id: 'sc3',
+        category: 'ecommerce_pay',
+        icon: 'fa-credit-card',
+        badge: 'กรณีที่ 3 : คำสั่งซื้อ & ระบบชำระเงิน',
+        title: 'การเปิดรับคำสั่งซื้อและรับชำระเงินผ่านเว็บไซต์',
+        shortDesc: 'ลูกค้ากดสั่งซื้อผ่านระบบตะกร้าสินค้าบนเว็บ และชำระเงินผ่านโอนเงิน/QR/บัตรเครดิต',
+        laws: [
+          'พ.ร.บ. ว่าด้วยธุรกรรมทางอิเล็กทรอนิกส์ พ.ศ. 2544',
+          'พ.ร.บ. ทะเบียนพาณิชย์ พ.ศ. 2499 / พ.ร.บ. ขายตรงและตลาดแบบตรง พ.ศ. 2545',
+          'พ.ร.บ. ระบบการชำระเงิน พ.ศ. 2560 และประมวลรัษฎากร (ภาษี)'
+        ],
+        keywords: [
+          'จดทะเบียนพาณิชย์อิเล็กทรอนิกส์ DBD',
+          'จดทะเบียนตลาดแบบตรง สคบ.',
+          'Payment Gateway ได้รับอนุญาต ธปท.',
+          'ความสมบูรณ์ของสัญญาซื้อขายออนไลน์'
+        ],
+        issues: [
+          {
+            topic: 'การจดทะเบียนธุรกิจออนไลน์ให้ถูกต้อง',
+            detail: 'ร้านค้าที่มีเว็บไซต์และระบบสั่งซื้อของตนเอง ต้องจดทะเบียนพาณิชย์อิเล็กทรอนิกส์ (DBD Registered) ภายใน 30 วันนับแต่วันเริ่มประกอบกิจการ และพิจารณาจดทะเบียนตลาดแบบตรงกับ สคบ. หากเข้าเกณฑ์'
+          },
+          {
+            topic: 'ความสมบูรณ์ของคำสั่งซื้อและการทำสัญญาออนไลน์',
+            detail: 'การคลิกยืนยันคำสั่งซื้อและการส่งอีเมล/ข้อความตอบรับ ถือเป็นคำเสนอและคำสนองที่ก่อให้เกิดสัญญาที่มีผลผูกพันตามกฎหมายธุรกรรมทางอิเล็กทรอนิกส์'
+          },
+          {
+            topic: 'ความปลอดภัยของระบบชำระเงินและภาษีอากร',
+            detail: 'หากใช้ตัวกลางรับชำระเงิน (Payment Gateway) ต้องเลือกผู้ให้บริการที่ได้รับใบอนุญาตจากธนาคารแห่งประเทศไทย (ธปท.) และต้องบันทึกรายรับเพื่อยื่นภาษีเงินได้และภาษีมูลค่าเพิ่ม (หากรายได้เกิน 1.8 ล้านบาท/ปี)'
+          }
+        ],
+        factCheck: 'ตรวจสอบว่าเว็บไซต์มีระบบยืนยันคำสั่งซื้อชัดเจนหรือไม่ ใช้ผู้ให้บริการรับชำระเงินรายใด และยอดขายรวมต่อปีใกล้ถึงเกณฑ์จดทะเบียนภาษีมูลค่าเพิ่ม (VAT) หรือยัง',
+        precautions: 'ห้ามเก็บข้อมูลหมายเลขบัตรเครดิตหรือรหัส CVV ของลูกค้าไว้ในฐานข้อมูลของร้านค้าเองโดยเด็ดขาด ให้ส่งผ่านระบบของ Payment Gateway ที่ได้มาตรฐานเท่านั้น',
+        references: 'กรมพัฒนาธุรกิจการค้า (https://www.dbd.go.th) และ ธนาคารแห่งประเทศไทย (https://www.bot.or.th)'
+      }
+    ];
+
+    // 2. ฐานข้อมูลแหล่งอ้างอิงทางการที่ตรวจสอบย้อนกลับได้
+    const OFFICIAL_SOURCES = [
+      {
+        agency: 'สำนักงานคณะกรรมการกฤษฎีกา',
+        docName: 'ระบบฐานข้อมูลกฎหมายกลาง (พ.ร.บ. ลิขสิทธิ์, พ.ร.บ. ธุรกรรมทางอิเล็กทรอนิกส์, พ.ร.บ. คุ้มครองผู้บริโภค)',
+        url: 'https://www.krisdika.go.th',
+        verifiedDate: '20 พฤศจิกายน 2569',
+        tag: 'ตัวบทกฎหมายทางการ'
+      },
+      {
+        agency: 'สำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (สคส.)',
+        docName: 'พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 และแนวปฏิบัติเรื่องฐานสัญญา / Privacy Notice',
+        url: 'https://www.pdpc.or.th',
+        verifiedDate: '20 พฤศจิกายน 2569',
+        tag: 'PDPA'
+      },
+      {
+        agency: 'กรมพัฒนาธุรกิจการค้า (DBD)',
+        docName: 'คู่มือการจดทะเบียนพาณิชย์อิเล็กทรอนิกส์ (DBD Registered) และมาตรฐานร้านค้าออนไลน์',
+        url: 'https://www.dbd.go.th',
+        verifiedDate: '20 พฤศจิกายน 2569',
+        tag: 'จดทะเบียนร้านค้า'
+      },
+      {
+        agency: 'สำนักงานคณะกรรมการคุ้มครองผู้บริโภค (สคบ.)',
+        docName: 'แนวทางการจดทะเบียนตลาดแบบตรง และหลักเกณฑ์การโฆษณาขายสินค้าออนไลน์',
+        url: 'https://www.ocpb.go.th',
+        verifiedDate: '20 พฤศจิกายน 2569',
+        tag: 'คุ้มครองผู้บริโภค'
+      },
+      {
+        agency: 'ธนาคารแห่งประเทศไทย (ธปท.)',
+        docName: 'รายชื่อผู้ให้บริการระบบการชำระเงินภายใต้การกำกับ (พ.ร.บ. ระบบการชำระเงิน พ.ศ. 2560)',
+        url: 'https://www.bot.or.th',
+        verifiedDate: '20 พฤศจิกายน 2569',
+        tag: 'ระบบชำระเงิน'
+      },
+      {
+        agency: 'สำนักงานพัฒนาธุรกรรมทางอิเล็กทรอนิกส์ (ETDA)',
+        docName: 'แนวทางการทำธุรกรรมทางอิเล็กทรอนิกส์และความปลอดภัยสำหรับผู้ประกอบการอีคอมเมิร์ซ',
+        url: 'https://www.etda.or.th',
+        verifiedDate: '20 พฤศจิกายน 2569',
+        tag: 'E-Commerce'
+      }
+    ];
+
+    // ตัวแปรสถานะปัจจุบัน
+    let selectedScenarioId = 'sc1';
+    let savedNotes = [];
+    let noteToDeleteId = null;
+
+    // โหลดข้อมูลเมื่อเปิดหน้าเว็บ
+    window.onload = function () {
+      loadNotesFromStorage();
+      renderScenarioCards();
+      renderScenarioDetail(selectedScenarioId);
+      filterKnowledgeBase();
+      renderOfficialSources();
+      renderSavedNotes();
+      
+      // ตั้งค่าวันที่สำหรับหัวรายงานตอนสั่งพิมพ์
+      const now = new Date();
+      document.getElementById('print-date').textContent = now.toLocaleDateString('th-TH', {
+        year: 'numeric', month: 'long', day: 'numeric'
+      });
+    };
+
+    // ฟังก์ชันสลับหน้าแท็บ (Navigation)
+    function switchTab(tabName) {
+      // ซ่อนทุกแท็บ
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      // แสดงแท็บที่เลือก
+      document.getElementById('tab-' + tabName).classList.remove('hidden');
+
+      // อัปเดตสีปุ่มเมนู
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.remove('bg-sky-600', 'text-white');
+        btn.classList.add('text-slate-200', 'hover:bg-navy-700');
+      });
+      const activeBtn = document.getElementById('nav-' + tabName);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-200', 'hover:bg-navy-700');
+        activeBtn.classList.add('bg-sky-600', 'text-white');
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ==========================================
+    // ส่วนจัดการสถานการณ์ธุรกิจ (Scenarios)
+    // ==========================================
+    function renderScenarioCards() {
+      const container = document.getElementById('scenario-cards-grid');
+      container.innerHTML = SCENARIOS_DATA.map(sc => {
+        const isSelected = sc.id === selectedScenarioId;
+        return `
+          <div onclick="selectScenario('${sc.id}')" class="cursor-pointer rounded-2xl p-5 border-2 transition-all flex flex-col justify-between ${
+            isSelected 
+              ? 'bg-navy-800 text-white border-sky-500 shadow-md' 
+              : 'bg-white text-slate-800 border-slate-200 hover:border-sky-300 shadow-sm'
+          }">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${
+                  isSelected ? 'bg-sky-500/30 text-sky-200' : 'bg-sky-50 text-sky-700'
+                }">${sc.badge}</span>
+                <i class="fa-solid ${sc.icon} text-lg ${isSelected ? 'text-sky-400' : 'text-slate-400'}"></i>
+              </div>
+              <h3 class="font-display font-bold text-lg mb-2 leading-snug">${sc.title}</h3>
+              <p class="text-sm ${isSelected ? 'text-slate-300' : 'text-slate-600'}">${sc.shortDesc}</p>
+            </div>
+            <div class="mt-4 pt-3 border-t ${isSelected ? 'border-slate-700' : 'border-slate-100'} flex items-center justify-between text-xs font-medium">
+              <span>${isSelected ? 'กำลังแสดงรายละเอียดด้านล่าง' : 'คลิกเพื่อดูรายละเอียด'}</span>
+              <i class="fa-solid fa-arrow-right"></i>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectScenario(id) {
+      selectedScenarioId = id;
+      renderScenarioCards();
+      renderScenarioDetail(id);
+    }
+
+    function renderScenarioDetail(id) {
+      const sc = SCENARIOS_DATA.find(item => item.id === id);
+      if (!sc) return;
+
+      const panel = document.getElementById('scenario-detail-panel');
+      panel.innerHTML = `
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-slate-200 pb-5">
+          <div>
+            <span class="text-xs font-bold text-sky-600 uppercase tracking-wider">${sc.badge}</span>
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-navy-800 mt-1">${sc.title}</h3>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="sendToNoteForm('${sc.id}')" class="px-4 py-2.5 bg-sky-600 hover:bg-sky-500 text-white text-sm font-display font-semibold rounded-xl shadow-sm transition flex items-center gap-2">
+              <i class="fa-solid fa-file-pen"></i> นำไปบันทึกในสมุดสรุปผล
+            </button>
+          </div>
+        </div>
+
+        <!-- กฎหมายที่เกี่ยวข้อง -->
+        <div>
+          <h4 class="font-display font-bold text-base text-navy-800 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-gavel text-sky-600"></i> กฎหมายที่เกี่ยวข้องโดยตรง
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            ${sc.laws.map(law => `
+              <span class="bg-navy-50 text-navy-800 border border-navy-200 px-3 py-1.5 rounded-lg text-sm font-medium">
+                ${law}
+              </span>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- คำค้นแนะนำ (คลิกเพื่อนำไปค้นหาได้ทันที) -->
+        <div>
+          <h4 class="font-display font-bold text-base text-navy-800 mb-2 flex items-center gap-2">
+            <i class="fa-solid fa-key text-sky-600"></i> คำค้นแนะนำสำหรับสืบค้นเพิ่มเติม <span class="text-xs font-normal text-slate-500">(คลิกคำค้นเพื่อไปหน้าสืบค้น)</span>
+          </h4>
+          <div class="flex flex-wrap gap-2">
+            ${sc.keywords.map(kw => `
+              <button onclick="quickSearchKeyword('${kw}')" class="bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium transition flex items-center gap-1.5">
+                <i class="fa-solid fa-magnifying-glass text-xs"></i> ${kw}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- ประเด็นกฎหมายที่ต้องตรวจสอบ -->
+        <div>
+          <h4 class="font-display font-bold text-base text-navy-800 mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-clipboard-check text-sky-600"></i> ประเด็นกฎหมายที่ผู้ประกอบการต้องตรวจสอบ
+          </h4>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            ${sc.issues.map((issue, idx) => `
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-1.5">
+                <div class="text-xs font-bold text-sky-700">ประเด็นที่ ${idx + 1}</div>
+                <div class="font-display font-bold text-navy-800 text-sm">${issue.topic}</div>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">${issue.detail}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- ข้อเท็จจริงที่ต้องตรวจเพิ่ม & ข้อควรระวัง -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <div class="bg-blue-50/70 border border-blue-200 rounded-xl p-4">
+            <h5 class="font-display font-bold text-sm text-navy-800 mb-1 flex items-center gap-2">
+              <i class="fa-solid fa-circle-question text-blue-600"></i> ข้อเท็จจริงที่ต้องตรวจสอบเพิ่มเติม
+            </h5>
+            <p class="text-sm text-slate-700 leading-relaxed">${sc.factCheck}</p>
+          </div>
+          <div class="bg-amber-50 border border-amber-200 rounded-xl p-4">
+            <h5 class="font-display font-bold text-sm text-amber-900 mb-1 flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-amber-600"></i> ข้อควรระวังสำคัญ
+            </h5>
+            <p class="text-sm text-amber-900 leading-relaxed">${sc.precautions}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // ==========================================
+    // ส่วนสืบค้นและแหล่งอ้างอิง (Search & References)
+    // ==========================================
+    function quickSearchKeyword(keyword) {
+      document.getElementById('search-input').value = keyword;
+      document.getElementById('category-filter').value = 'all';
+      switchTab('search');
+      filterKnowledgeBase();
+    }
+
+    function resetSearch() {
+      document.getElementById('search-input').value = '';
+      document.getElementById('category-filter').value = 'all';
+      filterKnowledgeBase();
+    }
+
+    function filterKnowledgeBase() {
+      const query = document.getElementById('search-input').value.trim().toLowerCase();
+      const cat = document.getElementById('category-filter').value;
+      const container = document.getElementById('search-results-container');
+
+      // รวบรวมประเด็นทั้งหมดจากทุกสถานการณ์เพื่อนำมาค้นหา
+      let allItems = [];
+      SCENARIOS_DATA.forEach(sc => {
+        sc.issues.forEach(issue => {
+          allItems.push({
+            scenarioId: sc.id,
+            scenarioTitle: sc.title,
+            category: sc.category,
+            laws: sc.laws.join(', '),
+            keywords: sc.keywords,
+            topic: issue.topic,
+            detail: issue.detail,
+            references: sc.references
+          });
+        });
+      });
+
+      const filtered = allItems.filter(item => {
+        const matchCat = cat === 'all' || item.category === cat;
+        const searchableText = `${item.scenarioTitle} ${item.laws} ${item.keywords.join(' ')} ${item.topic} ${item.detail}`.toLowerCase();
+        const matchQuery = !query || searchableText.includes(query);
+        return matchCat && matchQuery;
+      });
+
+      document.getElementById('search-count').textContent = `พบ ${filtered.length} ประเด็น`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-white rounded-xl border border-slate-200 p-8 text-center space-y-2">
+            <i class="fa-solid fa-folder-open text-3xl text-slate-300"></i>
+            <p class="text-slate-600 font-medium">ไม่พบประเด็นกฎหมายที่ตรงกับคำค้น "${document.getElementById('search-input').value}"</p>
+            <button onclick="resetSearch()" class="text-sm text-sky-600 hover:underline">แสดงประเด็นกฎหมายทั้งหมด</button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(item => `
+        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm hover:border-sky-300 transition flex flex-col justify-between space-y-3">
+          <div class="space-y-2">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-xs font-semibold text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-md">${item.scenarioTitle}</span>
+            </div>
+            <h4 class="font-display font-bold text-base text-navy-800">${item.topic}</h4>
+            <p class="text-sm text-slate-600 leading-relaxed">${item.detail}</p>
+            <div class="text-xs text-slate-500 pt-1">
+              <strong class="text-slate-700">กฎหมายอ้างอิง:</strong> ${item.laws}
+            </div>
+          </div>
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs text-slate-400 truncate max-w-[65%]">${item.references}</span>
+            <button onclick="sendToNoteForm('${item.scenarioId}')" class="text-xs font-semibold text-sky-600 hover:text-sky-800 flex items-center gap-1">
+              <i class="fa-solid fa-plus-circle"></i> บันทึกประเด็นนี้
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderOfficialSources() {
+      const grid = document.getElementById('official-sources-grid');
+      grid.innerHTML = OFFICIAL_SOURCES.map(src => `
+        <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between space-y-3">
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-navy-700 bg-navy-50 px-2.5 py-0.5 rounded-md">${src.tag}</span>
+              <span class="text-[11px] text-slate-400">ตรวจเมื่อ: ${src.verifiedDate}</span>
+            </div>
+            <h4 class="font-display font-bold text-base text-navy-800 pt-1">${src.agency}</h4>
+            <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">${src.docName}</p>
+          </div>
+          <div class="pt-2">
+            <a href="${src.url}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-sky-600 hover:text-sky-800">
+              <span>เปิดเว็บไซต์ทางการ (${src.url.replace('https://', '')})</span>
+              <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+            </a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ==========================================
+    // ส่วนสมุดบันทึกผลการสืบค้น (LocalStorage Notes)
+    // ==========================================
+    function loadNotesFromStorage() {
+      try {
+        const raw = localStorage.getItem('ebiz_legal_compass_notes');
+        if (raw) {
+          savedNotes = JSON.parse(raw);
+        } else {
+          // ใส่ตัวอย่างบันทึกตั้งต้น 1 รายการเพื่อให้ผู้ใช้เห็นรูปแบบที่สมบูรณ์ทันที
+          savedNotes = [
+            {
+              id: 'sample-1',
+              scenario: 'ตัวอย่าง: การเก็บชื่อ ที่อยู่ และเบอร์โทรเพื่อจัดส่งสินค้า',
+              findings: 'ใช้ฐานสัญญา (Contract) ตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 มาตรา 24(3) ได้โดยไม่ต้องขอความยินยอม แต่ต้องแจ้ง Privacy Notice ตามมาตรา 23',
+              evidence: 'สำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (สคส.) / พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (https://www.pdpc.or.th) สืบค้นเมื่อ 20 พ.ย. 2569',
+              precautions: 'ไม่นำเบอร์โทรลูกค้าไปส่งโปรโมชันต่อหากไม่ได้ขอความยินยอมแยกต่างหาก และปิดบังเบอร์โทรบางหลักบนใบปะหน้าพัสดุ',
+              updatedAt: '20 พ.ย. 2569 (ตัวอย่าง)'
+            }
+          ];
+          saveNotesToStorage();
+        }
+      } catch (e) {
+        savedNotes = [];
+      }
+      updateNoteBadge();
+    }
+
+    function saveNotesToStorage() {
+      try {
+        localStorage.setItem('ebiz_legal_compass_notes', JSON.stringify(savedNotes));
+      } catch (e) {
+        showToast('ไม่สามารถบันทึกข้อมูลลงในเบราว์เซอร์ได้', 'error');
+      }
+      updateNoteBadge();
+    }
+
+    function updateNoteBadge() {
+      document.getElementById('note-badge').textContent = savedNotes.length;
+    }
+
+    function sendToNoteForm(scenarioId) {
+      selectedScenarioId = scenarioId;
+      switchTab('notes');
+      autoFillFromCurrentScenario();
+    }
+
+    function autoFillFromCurrentScenario() {
+      const sc = SCENARIOS_DATA.find(item => item.id === selectedScenarioId) || SCENARIOS_DATA[0];
+      resetNoteForm();
+      document.getElementById('note-scenario').value = sc.title;
+      document.getElementById('note-findings').value = `${sc.laws.join(' / ')} — ประเด็นหลัก: ${sc.issues.map(i => i.topic).join(', ')}`;
+      document.getElementById('note-evidence').value = `${sc.references} (ตรวจสอบเมื่อ 20 พฤศจิกายน 2569)`;
+      document.getElementById('note-precautions').value = sc.precautions;
+      showToast('ดึงข้อมูลจากสถานการณ์ที่เลือกใส่ฟอร์มเรียบร้อยแล้ว');
+    }
+
+    function saveNote(event) {
+      event.preventDefault();
+      const editId = document.getElementById('edit-note-id').value;
+      const scenario = document.getElementById('note-scenario').value.trim();
+      const findings = document.getElementById('note-findings').value.trim();
+      const evidence = document.getElementById('note-evidence').value.trim();
+      const precautions = document.getElementById('note-precautions').value.trim();
+
+      const nowStr = new Date().toLocaleDateString('th-TH', {
+        year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+
+      if (editId) {
+        const index = savedNotes.findIndex(n => n.id === editId);
+        if (index !== -1) {
+          savedNotes[index] = { ...savedNotes[index], scenario, findings, evidence, precautions, updatedAt: nowStr };
+          showToast('อัปเดตบันทึกผลการวิเคราะห์เรียบร้อยแล้ว');
+        }
+      } else {
+        const newNote = {
+          id: 'note-' + Date.now(),
+          scenario,
+          findings,
+          evidence,
+          precautions,
+          updatedAt: nowStr
+        };
+        savedNotes.unshift(newNote);
+        showToast('บันทึกผลการวิเคราะห์ลงสมุดบันทึกแล้ว');
+      }
+
+      saveNotesToStorage();
+      resetNoteForm();
+      renderSavedNotes();
+    }
+
+    function editNote(id) {
+      const note = savedNotes.find(n => n.id === id);
+      if (!note) return;
+
+      document.getElementById('edit-note-id').value = note.id;
+      document.getElementById('note-scenario').value = note.scenario;
+      document.getElementById('note-findings').value = note.findings;
+      document.getElementById('note-evidence').value = note.evidence;
+      document.getElementById('note-precautions').value = note.precautions;
+
+      document.getElementById('form-title').innerHTML = '<i class="fa-solid fa-pen text-amber-600 mr-1.5"></i> แก้ไขบันทึกผลการวิเคราะห์';
+      document.getElementById('submit-note-btn').innerHTML = '<i class="fa-solid fa-check"></i> บันทึกการแก้ไข';
+      document.getElementById('cancel-edit-btn').classList.remove('hidden');
+      
+      document.getElementById('note-form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function resetNoteForm() {
+      document.getElementById('note-form').reset();
+      document.getElementById('edit-note-id').value = '';
+      document.getElementById('form-title').innerHTML = '<i class="fa-solid fa-pen-to-square text-sky-600 mr-1.5"></i> บันทึกผลการวิเคราะห์ใหม่';
+      document.getElementById('submit-note-btn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> บันทึกผลการสืบค้น';
+      document.getElementById('cancel-edit-btn').classList.add('hidden');
+    }
+
+    function openDeleteModal(id) {
+      noteToDeleteId = id;
+      const modal = document.getElementById('delete-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeDeleteModal() {
+      noteToDeleteId = null;
+      const modal = document.getElementById('delete-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function confirmDeleteNote() {
+      if (noteToDeleteId) {
+        savedNotes = savedNotes.filter(n => n.id !== noteToDeleteId);
+        saveNotesToStorage();
+        renderSavedNotes();
+        showToast('ลบบันทึกเรียบร้อยแล้ว');
+      }
+      closeDeleteModal();
+    }
+
+    function renderSavedNotes() {
+      const container = document.getElementById('saved-notes-list');
+      if (savedNotes.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl border border-dashed border-slate-300 p-10 text-center space-y-2">
+            <i class="fa-solid fa-book-open text-4xl text-slate-300"></i>
+            <h4 class="font-display font-bold text-slate-700">ยังไม่มีรายการบันทึกผลการวิเคราะห์</h4>
+            <p class="text-sm text-slate-500">กรอกข้อมูลในฟอร์มด้านซ้าย หรือกดปุ่ม "ดึงข้อมูลอัตโนมัติ" เพื่อเริ่มต้นบันทึก</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = savedNotes.map((note, idx) => `
+        <article class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-3">
+          <div class="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
+            <div>
+              <span class="text-xs font-bold text-sky-700 bg-sky-50 px-2.5 py-0.5 rounded-full">รายการที่ ${savedNotes.length - idx}</span>
+              <h4 class="font-display font-bold text-lg text-navy-800 mt-1.5">${escapeHtml(note.scenario)}</h4>
+              <span class="text-xs text-slate-400"><i class="fa-regular fa-clock mr-1"></i> บันทึกเมื่อ: ${escapeHtml(note.updatedAt)}</span>
+            </div>
+            <div class="flex items-center gap-1.5 no-print">
+              <button onclick="editNote('${note.id}')" class="p-2 text-slate-500 hover:text-sky-600 hover:bg-sky-50 rounded-lg transition" title="แก้ไข">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button onclick="openDeleteModal('${note.id}')" class="p-2 text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="ลบ">
+                <i class="fa-solid fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-2.5 text-sm">
+            <div>
+              <strong class="text-navy-800 block font-display">ข้อค้นพบทางกฎหมาย:</strong>
+              <p class="text-slate-700 leading-relaxed">${escapeHtml(note.findings)}</p>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-lg border border-slate-100">
+              <strong class="text-navy-800 block font-display text-xs mb-0.5">หลักฐานและแหล่งอ้างอิง:</strong>
+              <p class="text-slate-600 text-xs sm:text-sm">${escapeHtml(note.evidence)}</p>
+            </div>
+            <div class="bg-amber-50/80 p-3 rounded-lg border border-amber-100">
+              <strong class="text-amber-900 block font-display text-xs mb-0.5">ข้อควรระวัง / แนวทางปฏิบัติ:</strong>
+              <p class="text-amber-900 text-xs sm:text-sm">${escapeHtml(note.precautions)}</p>
+            </div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // คัดลอกรายงานสรุปทั้งหมดลง Clipboard
+    function copyAllNotes() {
+      if (savedNotes.length === 0) {
+        showToast('ไม่มีรายการบันทึกสำหรับคัดลอก');
+        return;
+      }
+
+      const summaryText = savedNotes.map((n, i) => 
+        `[${i + 1}] สถานการณ์: ${n.scenario}\n` +
+        `- ข้อค้นพบทางกฎหมาย: ${n.findings}\n` +
+        `- หลักฐานอ้างอิง: ${n.evidence}\n` +
+        `- ข้อควรระวัง: ${n.precautions}\n` +
+        `(บันทึกเมื่อ: ${n.updatedAt})`
+      ).join('\n\n----------------------------------------\n\n');
+
+      const header = `สรุปผลการวิเคราะห์กฎหมายธุรกิจออนไลน์ (E-Biz Legal Compass)\n========================================\n\n`;
+      
+      // ใช้ textarea + execCommand('copy') เพื่อรองรับการทำงานใน iFrame อย่างสมบูรณ์
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.value = header + summaryText;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempTextArea);
+
+      showToast('คัดลอกสรุปผลการวิเคราะห์ทั้งหมดไปยังคลิปบอร์ดแล้ว');
+    }
+
+    // สั่งพิมพ์รายงาน (Print / Export PDF)
+    function printReport() {
+      window.print();
+    }
+
+    // แสดงกล่องข้อความแจ้งเตือนชั่วคราว
+    function showToast(msg, type = 'success') {
+      const box = document.getElementById('toast-box');
+      const icon = document.getElementById('toast-icon');
+      const text = document.getElementById('toast-message');
+
+      text.textContent = msg;
+      icon.className = type === 'error' 
+        ? 'fa-solid fa-circle-exclamation text-red-400' 
+        : 'fa-solid fa-circle-check text-sky-400';
+
+      box.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        box.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    // ป้องกัน XSS เมื่อแสดงข้อความที่ผู้ใช้พิมพ์
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+  </script>
+</body>
+</html>
